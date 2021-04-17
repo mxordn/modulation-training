@@ -1,5 +1,6 @@
 import { Component, Injectable, NgModule, OnInit } from '@angular/core';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
+//import { SolutionService } from '../solution.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,10 +20,13 @@ export class Svg {
 })
 export class ScoreCanvasComponent implements OnInit {
 
-  constructor() {}
+
+  lsg: SafeHtml;
+
+  constructor(private solution: Svg) {}
 
   ngOnInit(): void {
-    ;
+    this.lsg = this.solution.lsg;
   }
 
 }

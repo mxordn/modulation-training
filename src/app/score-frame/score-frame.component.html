@@ -1,34 +1,33 @@
 <div class="container">
-<div class="row">
-    <div class="col-3">
-        <h2>Select Modulations</h2>
-        <div class="form-group">
-            <div class="btn-group btn-group" role="group">
-                <button (click)="onSubmitNewExercise()" class="btn btn-primary">Neue Aufgabe</button>
-                <ng-container  *ngFor="let mod of modulations; let i = index">
-                    <input class="btn-check" [(ngModel)]="mod.checked" type="checkbox" id="checkbox{{i}}"
-                            name="{{mod.type}}" value="{{mod.type}}">
-                    <label class="btn btn-outline-secondary" value="{{mod.type}}" for="checkbox{{i}}">{{mod.type}}</label>
-                </ng-container>
-            </div>         
+    <div class="row">
+        <div class="col-3">
+            <h3>Select your Modulations</h3>
+            <div class="form-group">
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group me-2" role="group">
+                        <button (click)="onSubmitNewExercise()" class="btn btn-primary">Neue Aufgabe</button>
+                    </div>
+                    <div class="btn-group me-2" role="group">
+                        <ng-container  *ngFor="let mod of modulations; let i = index">
+                            <input class="btn-check" [(ngModel)]="mod.checked" type="checkbox" id="checkbox{{i}}"
+                                    name="{{mod.type}}" value="{{mod.type}}">
+                            <label class="btn btn-outline-secondary" value="{{mod.type}}" for="checkbox{{i}}">{{mod.shortcut[0]}}<i class="{{mod.shortcut[1]}}"></i></label>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
-<div class="row">
-    <div class="col-6">
-        <mat-tab-group mat-align-tabs="center">
-            <mat-tab label="Aufgabe">
-                <div class="svg" [innerHTML]="svg"></div>
-            </mat-tab>
-            <mat-tab label="Musterlösung">
-                <div class="svg" [innerHTML]="lsg"></div>
-            </mat-tab>
-        </mat-tab-group>
+<br>
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <div class="svg" [innerHTML]="scores.svg"></div>
+            </div>
+        <div class="col-3">
+            {{ scores.hint }}
+        </div>
+        </div>
     </div>
-    <div class="col-3">
-        {{ hint }}
-    </div>
+    <button class="btn btn-success" [hidden]="!scores.lsg" (click)="openDialog()">Show sample solution</button>
 </div>
-
-<button mat-button (click)="openDialog()">Launch dialog</button>

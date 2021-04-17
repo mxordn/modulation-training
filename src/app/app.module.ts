@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { AppComponent } from './app.component';
 import { ScoreCanvasComponent, Svg } from 'src/app/score-canvas/score-canvas.component';
@@ -23,6 +24,7 @@ import { InlineSVGModule } from 'ng-inline-svg';
     HttpClientModule,
     BrowserAnimationsModule,
     MatTabsModule,
+    MatDialogModule,
     Svg,
     InlineSVGModule.forRoot()
   ],

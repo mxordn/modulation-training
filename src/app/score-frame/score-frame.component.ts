@@ -3,10 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { ScoreCanvasComponent, Svg } from '../score-canvas/score-canvas.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
 
 
 export interface Modulation {
   type: String,
+  shortcut: String[],
   loewe: String,
   checked: Boolean
 }
@@ -32,23 +34,22 @@ const requestOptions = {
 })
 export class ScoreFrameComponent implements OnInit {
   
-  
-  oberquinte: Modulation = {type: "Oberquinte", loewe: "Loewe I", checked: true}
-  oberquarte: Modulation = {type: "Oberquarte", loewe: "Loewe II", checked: false}
-  kleineUnterterz: Modulation = {type: "Kleine Unterterz", loewe: "Loewe III", checked: false}
-  großeUnterterz: Modulation = {type: "Große Unterterz", loewe: "Loewe IV", checked: false}
-  kleineOberterz: Modulation = {type: "Kleine Oberterz", loewe: "Loewe IX", checked: false}
-  großeOberterz: Modulation = {type: "Große Oberterz", loewe: "Loewe X", checked: false}
-  kleineObersekunde: Modulation = {type: "Kleine Obersekunde", loewe: "Loewe V", checked: false}
-  großeObersekunde: Modulation = {type: "Große Obersekunde", loewe: "Loewe VI", checked: false}
-  kleineUntersekunde: Modulation = {type: "Kleine Obersekunde", loewe: "Loewe VIII", checked: false}
-  grosseUntersekunde: Modulation = {type: "Große Untersekunde", loewe: "Loewe VII", checked: false}
-  tritonus: Modulation = {type: "Tritonus", loewe: "Loewe XI", checked: false}
+  oberquinte: Modulation = {type: "Oberquinte", shortcut: ["5", "bi bi-arrow-up"], loewe: "Loewe I", checked: true}
+  oberquarte: Modulation = {type: "Oberquarte", shortcut: ["4", "bi bi-arrow-up"], loewe: "Loewe II", checked: false}
+  kleineUnterterz: Modulation = {type: "Kleine Unterterz", shortcut: ["m3", "bi bi-arrow-down"], loewe: "Loewe III", checked: false}
+  großeUnterterz: Modulation = {type: "Große Unterterz", shortcut: ["M3", "bi bi-arrow-down"], loewe: "Loewe IV", checked: false}
+  kleineOberterz: Modulation = {type: "Kleine Oberterz", shortcut: ["m3", "bi bi-arrow-up"], loewe: "Loewe IX", checked: false}
+  großeOberterz: Modulation = {type: "Große Oberterz", shortcut: ["M3", "bi bi-arrow-up"], loewe: "Loewe X", checked: false}
+  kleineObersekunde: Modulation = {type: "Kleine Obersekunde", shortcut: ["m2", "bi bi-arrow-up"], loewe: "Loewe V", checked: false}
+  großeObersekunde: Modulation = {type: "Große Obersekunde", shortcut: ["M2", "bi bi-arrow-up"], loewe: "Loewe VI", checked: false}
+  kleineUntersekunde: Modulation = {type: "Kleine Obersekunde", shortcut: ["m2", "bi bi-arrow-down"], loewe: "Loewe VIII", checked: false}
+  grosseUntersekunde: Modulation = {type: "Große Untersekunde", shortcut: ["M2", "bi bi-arrow-down"], loewe: "Loewe VII", checked: false}
+  tritonus: Modulation = {type: "Tritonus", shortcut: ["a4/d5 ", "bi bi-arrow-down-up"], loewe: "Loewe XI", checked: false}
   
 
   modulations: Modulation[] = [this.oberquinte, this.oberquarte, this.kleineUnterterz, this.großeUnterterz,
                               this.kleineOberterz, this.großeOberterz, this.großeObersekunde, this.kleineObersekunde,
-                              this.grosseUntersekunde, this.tritonus, this.kleineUntersekunde];
+                              this.grosseUntersekunde, this.kleineUntersekunde, this.tritonus]; //
   
 
   submitted = false;
@@ -59,10 +60,10 @@ export class ScoreFrameComponent implements OnInit {
   //'https://glarean.mh-freiburg.de/hessen/loewe/neueAufgabe';
 
   svg: SafeHtml;
-  lsg: SafeHtml;
+  public lsg: SafeHtml;
   hint: SafeHtml;
 
-  constructor(private hC: HttpClient, public scores: Svg, private sanitizer: DomSanitizer) { }
+  constructor(private hC: HttpClient, public scores: Svg, private sanitizer: DomSanitizer, private loesung: MatDialog) { }
 
   ngOnInit(): void {
   }
@@ -82,11 +83,11 @@ export class ScoreFrameComponent implements OnInit {
 //    console.log(formData.get('modType'));
 
 
-    const result = await this.hC.post<Svg>(this.endpointAufgabe, formData).toPromise();
+    const result = await this.hC.post<Svg>(this.endpointAufgabe, formData).toPromise()
     if (result.done) {
-      this.svg = this.sanitizer.bypassSecurityTrustHtml(result.svg.toString());
-      this.lsg = this.sanitizer.bypassSecurityTrustHtml(result.lsg.toString());
-      this.hint = result.hint;
+      this.scores.svg = this.sanitizer.bypassSecurityTrustHtml(result.svg.toString());
+      this.scores.lsg = this.sanitizer.bypassSecurityTrustHtml(result.lsg.toString());
+      this.scores.hint = result.hint;
     }
     else {
       this.scores.svg = "Serverfehler";
@@ -96,6 +97,6 @@ export class ScoreFrameComponent implements OnInit {
   }
 
   public openDialog() {
-    //this.loesung.open(ScoreCanvasComponent);
+    this.loesung.open(ScoreCanvasComponent);
   }
 }
