@@ -5,7 +5,7 @@ import { ScoreCanvasComponent, Svg } from '../score-canvas/score-canvas.componen
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 
-export interface modulation {
+export interface Modulation {
   type: String,
   loewe: String,
   checked: Boolean
@@ -33,22 +33,22 @@ const requestOptions = {
 export class ScoreFrameComponent implements OnInit {
   
   
-  oberquinte: modulation = {type: "Oberquinte", loewe: "Loewe I", checked: true}
-  oberquarte: modulation = {type: "Oberquarte", loewe: "Loewe II", checked: false}
-  kleineUnterterz: modulation = {type: "Kleine Unterterz", loewe: "Loewe III", checked: false}
-  großeUnterterz: modulation = {type: "Große Unterterz", loewe: "Loewe IV", checked: false}
-  kleineOberterz: modulation = {type: "Kleine Oberterz", loewe: "Loewe IX", checked: false}
-  großeOberterz: modulation = {type: "Große Oberterz", loewe: "Loewe X", checked: false}
-  kleineObersekunde: modulation = {type: "Kleine Obersekunde", loewe: "Loewe V", checked: false}
-  großeObersekunde: modulation = {type: "Große Obersekunde", loewe: "Loewe VI", checked: false}
-  kleineUntersekunde: modulation = {type: "Kleine Obersekunde", loewe: "Loewe VIII", checked: false}
-  großeUntersekunde: modulation = {type: "Große Untersekunde", loewe: "Loewe VII", checked: false}
-  tritonus: modulation = {type: "Tritonus", loewe: "Loewe XI", checked: false}
+  oberquinte: Modulation = {type: "Oberquinte", loewe: "Loewe I", checked: true}
+  oberquarte: Modulation = {type: "Oberquarte", loewe: "Loewe II", checked: false}
+  kleineUnterterz: Modulation = {type: "Kleine Unterterz", loewe: "Loewe III", checked: false}
+  großeUnterterz: Modulation = {type: "Große Unterterz", loewe: "Loewe IV", checked: false}
+  kleineOberterz: Modulation = {type: "Kleine Oberterz", loewe: "Loewe IX", checked: false}
+  großeOberterz: Modulation = {type: "Große Oberterz", loewe: "Loewe X", checked: false}
+  kleineObersekunde: Modulation = {type: "Kleine Obersekunde", loewe: "Loewe V", checked: false}
+  großeObersekunde: Modulation = {type: "Große Obersekunde", loewe: "Loewe VI", checked: false}
+  kleineUntersekunde: Modulation = {type: "Kleine Obersekunde", loewe: "Loewe VIII", checked: false}
+  grosseUntersekunde: Modulation = {type: "Große Untersekunde", loewe: "Loewe VII", checked: false}
+  tritonus: Modulation = {type: "Tritonus", loewe: "Loewe XI", checked: false}
   
 
-  modulations: modulation[] = [this.oberquinte, this.oberquarte, this.kleineUnterterz, this.großeUnterterz,
+  modulations: Modulation[] = [this.oberquinte, this.oberquarte, this.kleineUnterterz, this.großeUnterterz,
                               this.kleineOberterz, this.großeOberterz, this.großeObersekunde, this.kleineObersekunde,
-                              this.großeUntersekunde, this.tritonus, this.kleineUntersekunde];
+                              this.grosseUntersekunde, this.tritonus, this.kleineUntersekunde];
   
 
   submitted = false;
@@ -70,7 +70,7 @@ export class ScoreFrameComponent implements OnInit {
   public async onSubmitNewExercise() {
     this.selectedMods = [];
     this.modulations.forEach((el) => {
-      if(el.checked) {
+      if (el.checked) {
         this.selectedMods.push(el.loewe);
       }
     });
@@ -82,7 +82,7 @@ export class ScoreFrameComponent implements OnInit {
 //    console.log(formData.get('modType'));
 
 
-    const result = await this.hC.post<Svg>(this.endpointAufgabe, formData).toPromise()
+    const result = await this.hC.post<Svg>(this.endpointAufgabe, formData).toPromise();
     if (result.done) {
       this.svg = this.sanitizer.bypassSecurityTrustHtml(result.svg.toString());
       this.lsg = this.sanitizer.bypassSecurityTrustHtml(result.lsg.toString());

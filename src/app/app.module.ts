@@ -5,7 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { MatTabsModule } from '@angular/material/tabs';
 
-
 import { AppComponent } from './app.component';
 import { ScoreCanvasComponent, Svg } from 'src/app/score-canvas/score-canvas.component';
 import { ScoreFrameComponent } from 'src/app/score-frame/score-frame.component';
