@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { ScoreCanvasComponent, Svg } from '../score-canvas/score-canvas.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 export interface Modulation {
@@ -63,12 +64,15 @@ export class ScoreFrameComponent implements OnInit {
   public lsg: SafeHtml;
   hint: SafeHtml;
 
-  constructor(private hC: HttpClient, public scores: Svg, private sanitizer: DomSanitizer, private loesung: MatDialog) { }
+  constructor(private hC: HttpClient, public scores: Svg,
+              private sanitizer: DomSanitizer,
+              private hintSnack: MatSnackBar) { }
 
   ngOnInit(): void {
   }
 
   public async onSubmitNewExercise() {
+    let oldhint = this.scores.hint;
     this.selectedMods = [];
     this.modulations.forEach((el) => {
       if (el.checked) {
@@ -88,6 +92,9 @@ export class ScoreFrameComponent implements OnInit {
       this.scores.svg = this.sanitizer.bypassSecurityTrustHtml(result.svg.toString());
       this.scores.lsg = this.sanitizer.bypassSecurityTrustHtml(result.lsg.toString());
       this.scores.hint = result.hint;
+      if (this.scores.hint != oldhint) {
+        this.hintSnack.dismiss();
+      }
     }
     else {
       this.scores.svg = "Serverfehler";
@@ -96,7 +103,7 @@ export class ScoreFrameComponent implements OnInit {
     }
   }
 
-  public openDialog() {
-    this.loesung.open(ScoreCanvasComponent);
+  public openHint(hint: string) {
+    this.hintSnack.open(hint, "Close")
   }
 }

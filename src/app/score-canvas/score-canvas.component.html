@@ -1,14 +1,23 @@
-<h2 mat-dialog-title>Best practice solution</h2>
-<div mat-dialog-content>
-  <div class="card">
-    <div class="svg" [innerHTML]="lsg"></div>
+<div class="modal" id="solution">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Best practice solution</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="svg" [innerHTML]="lsg"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary">Schließen</button>
+      </div>
+    </div>
   </div>
 </div>
-<div mat-dialog-actions>
-  <button class="btn btn-primary" mat-dialog-close>Schließen</button>
-</div>
 
-<!--<div class="card text-center">
+
+
+<!--<div class="card text-center">style="width: 50;"
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs">
         <li class="nav-item">

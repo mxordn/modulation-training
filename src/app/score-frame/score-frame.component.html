@@ -1,33 +1,71 @@
+<div id="drawer" class="modal fade modal-dialog-scrollable" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="offcanvas-title" id="offcanvasExampleLabel">Select your Modulations</h3>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div>        
+        <div class="offcanvas-body">
+          <mat-list>
+            <mat-list-item *ngFor="let mod of modulations; let i = index">
+                <mat-slide-toggle [(ngModel)]="mod.checked" type="checkbox" id="checkbox{{i}}"
+                        name="{{mod.type}}" value="{{mod.type}}" color="primary">
+                        {{mod.shortcut[0]}}<i class="{{mod.shortcut[1]}}"></i>
+                </mat-slide-toggle>
+            </mat-list-item>
+          </mat-list>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close and Save</button>
+            <button type="button" class="btn btn-primary" (click)="onSubmitNewExercise()" data-bs-dismiss="modal">Save and new exercise</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
 <div class="container">
-    <div class="row">
-        <div class="col-3">
-            <h3>Select your Modulations</h3>
-            <div class="form-group">
-                <div class="btn-toolbar" role="toolbar">
-                    <div class="btn-group me-2" role="group">
-                        <button (click)="onSubmitNewExercise()" class="btn btn-primary">Neue Aufgabe</button>
-                    </div>
-                    <div class="btn-group me-2" role="group">
-                        <ng-container  *ngFor="let mod of modulations; let i = index">
-                            <input class="btn-check" [(ngModel)]="mod.checked" type="checkbox" id="checkbox{{i}}"
-                                    name="{{mod.type}}" value="{{mod.type}}">
-                            <label class="btn btn-outline-secondary" value="{{mod.type}}" for="checkbox{{i}}">{{mod.shortcut[0]}}<i class="{{mod.shortcut[1]}}"></i></label>
-                        </ng-container>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <h2>Loewe – Modulationstraining</h2>
+  <div class="mainContent">
+    <div class="card-body" style="height: max-content;">
+      <div class="svg" [innerHTML]="scores.svg"></div>
     </div>
-<br>
-    <div class="row">
-        <div class="col-6">
-            <div class="card">
-                <div class="svg" [innerHTML]="scores.svg"></div>
-            </div>
-        <div class="col-3">
-            {{ scores.hint }}
+  </div>
+</div>
+<div class="container">
+  <div class="actions">
+    <!-- <h3>Actions:</h3>-->
+      <div class="card-text">
+        <div class="btn-group-vertical" style="width: 90%;">
+          <button (click)="onSubmitNewExercise()" class="btn btn-primary">New exercise</button>
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#drawer">Select Modulations</button>
         </div>
+        <br>
+        <br>
+        <div class="btn-group-vertical" role="group" style="width: 90%;">
+          <button class="btn btn-warning" [disabled]="!scores.hint" (click)="openHint(scores.hint)">Show hint</button>
+          <button class="btn btn-success" [disabled]="!scores.lsg" data-bs-toggle="modal" data-bs-target="#solution">Show sample solution</button>
         </div>
+      </div>
+  </div>
+</div>
+</div>
+
+<div class="modal" tabindex="-1" id="solution">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Best practice solution</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="svg" [innerHTML]="scores.lsg"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" data-bs-dismiss="modal">Schließen</button>
+      </div>
     </div>
-    <button class="btn btn-success" [hidden]="!scores.lsg" (click)="openDialog()">Show sample solution</button>
+  </div>
 </div>

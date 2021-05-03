@@ -8,7 +8,7 @@ import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 @NgModule()
 export class Svg {
   done: SafeHtml;
-  hint: SafeHtml;
+  hint: string;
   svg: SafeHtml;
   lsg: SafeHtml;
 }
