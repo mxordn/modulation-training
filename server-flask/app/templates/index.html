@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" charset="UTF-8"/>
+            <link rel="stylesheet" type="text/css" href="{{  url_for('static', filename='style.css') }}">
+            <script type=text/javascript src="{{  url_for('static', filename='jquery-3.2.1.min.js') }}"></script>
+            <script type=text/javascript src="{{  url_for('static', filename='jquery.nice-select.min.js') }}"></script>
+            <script type=text/javascript src="{{  url_for('static', filename='assets.js') }}"></script>
+            <link rel="icon" href="./static/favicon.ico" type="image/x-icon">
+            <link rel="stylesheet" href="./static/nice-select.css">
+            <title>Modulationstraining (Loewesches Zirkeltraining)</title>
+        </head>
+
+<body>  
+    <!-- - Switch to toggle the menu>-->
+    <div style="background-color:#e5e5e5;padding:15px;text-align:left;">
+      <h1>Modulationstraining nach C. Loewe</h1>
+<!--      <button id="doku" class="inputfile"></button>Dr. 
+      <label for="doku">Erklärungen zu den Klauseln</label>
+      <button id="dokuKad" class="inputfile"></button>
+      <label for="dokuKad">Erklärungen zu den Kadenzen</label>
+      <button id="templatesToggler" class="inputfile"></button>
+      <label for="templatesToggler">Vorlagen zum selbst Schreiben</label>
+      <button id="bachChoraele" class="inputfile"></button>
+      <label for="bachChoraele">Außenstimmensätze von Bach-Chorälen</label>
+-->
+<!--        <div class="onoffswitch">
+          <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+            <label class="onoffswitch-label" for="myonoffswitch">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+              </label>
+        </div>-->
+    </div>
+
+    <div style="overflow:auto">
+      <div class="menu" id="menucontainer" style="background-color:#e5e5e5;margin-top:7px;">
+        <form id="uploadMe" method = "POST" enctype = "multipart/form-data">
+<!--            <input type="checkbox" name="klauseln" checked="checked" id="k"/>
+            <label for="k">Klauseln prüfen</label>
+            <br>
+            <input type="checkbox" name="as" checked="checked" id="a"/>
+            <label for="a">Außenstimmen prüfen</label>
+            <br>
+            <input type="text" name="bassPart" id="bS" value="1" size="3"/>
+            <label for="bS">Bassstimme angeben</label><br>
+            <input type="file" name="xml" accept = ".xml,.mxml,.musicxml" id="infile" class="inputfile"/>
+            <label for="infile">Datei auswählen</label>
+            <br>
+            -->
+            <br>
+            <input type = "submit" id="submitB" class="inputfile"/>
+            <label for="submitB">Neue Aufgabe</label>
+            <br>
+            <br>
+            Oder Aufgabe wechseln:
+            <br>
+            <select name="modType">
+                {% for x in mods %}
+                <option value="{{ x }}"{% if loop.first %} SELECTED{% endif %}>{{ x }}</option>
+                {% endfor %}
+            </select>
+        </form>
+      </div>
+              
+      <div class="main">
+          <div id="waiting-wheel" style="display: none">
+                <img src="./static/waiting-wheel.gif" alt="Waiting Wheel" width="100" height="100">
+          </div>
+          <span id="svgOutput"></span>
+          <br>
+          <span>
+            <div class="main" id="lsgDiv" hidden>
+            <input type = "checkbox" id="lsgShow" class="inputfile"/>
+            <label for="lsgShow">Lösung anzeigen/verstecken</label>
+          </div>
+          </span>
+          <span id="lsg"></span>
+          <span id="faqText" hidden>
+              <h2>Informationen und Hinweise zum Üben</h2>
+              <h3>Einleitung</h3>
+              <p>Carl Loewe beschreibt in seiner <em>Klavier- und Generalbassschule</em> 11 Progressionen, mit denen in jede Zieltonart moduliert werden kann. Er bestimmt seine Zieltonart dabei in Intervallschritten vom Ausgangspunkt und kommt so auf 11 verschiedene Modulationen, die hier zum Training verfügbar gemacht sind. Hinzu kommt noch das Satzmodell der Teufelmühle, das in das Training integriert werden kann.</p>
+              <p>Hier einige Auszüge aus dem Kapitel, die etwas zur Konzeption der Beispiele sagen:</p>
+              <em>
+              <p>„Mit einer Modulation kann man schon in alle Tonleitern kommen, wenn man ruhig ihre Bahn verfolgt. Da dieses aber langweilig wäre, so gilt es, auf dem kürzesten Wege von einer Tonart in die andere zu kommen, denn verlängern lässt er sich sehr leicht.“</p>
+              <p>„Eine jede Modulation kann ebensowohl für Moll als auch für Dur gebraucht werden, da nach der Auflösung des Hauptseptimenaccordes (Dominantseptakkordes) entweder der Dur oder der Moll Dreiklang gegriffen werden kann.“</p>
+              <p>„Da es nun 12 Töne gibt, und derjenige, von welchem ich ausgehe, abgezogen wird, so kann es nur 11 Modulationen geben.“</p>
+              </em>
+              <p>Das vollständige Kapitel von Loewe mit seinen Erläuterungen kann hier heruntergeladen werden: <a id="loewe" href="{{ url_for('static', filename='Loewe-Sequenz-und-Modulation.pdf') }}" target="_blank">Loewe Über die Modulation</a>.</p>
+
+              <h3>Anleitung zur Nutzung</h3>
+                <p>Sie können die Webseite nutzen, um die Modulationsgänge von Loewe am Klavier zu spielen oder auf dem Papier auszusetzen.</p>
+                <ul>
+                    <li>Wählen Sie auf der Seite im Menü die gewünschte Modulation aus (Loewe I-XI oder Teufelmühle).</li>
+                    <li>Klicken Sie auf „Neue Aufgabe“.</li>
+                    <li>Spielen Sie Aufgabe am Klavier oder setzen Sie sie auf dem Papier aus.</li>
+                    <li>Ein erneuter Klick auf „Neue Aufgabe“ gibt Ihnen eine neue Transposition und Tonart vor und der Spass kann aufs Neue beginnen.</li>
+                </ul>
+                <p>Eine Musterlösung ist auf der Seite zu jeder Übung hinterlegt. Es ist aber immer möglich, auch andere Lagen auszuprobieren als die, welche in der Musterlösung angegeben sind.</p>
+              <h3>Zirkeltraining</h3>
+              <p>Die Übungen können entweder so ausgeführt werden, wie sie hier erscheinen, oder man spielt sie im Zirkel, was eigentlich Loewes Intention ist.</p>
+              <p>„Im Zirkel“ bedeutet, dass man die erreichte Zieltonart als neue Starttonart nimmt und das Modulationsmodell wiederholt, bis man z.B. wieder in der ursprünglichen Ausgangstonart ankommt. Bei einigen Progressionen kommt man nicht automatisch in allen Tonarten vorbei und muss weitere Startpunkte wählen, um alle Tonarten einmal zu erreichen.</p>
+          </span>
+      </div>
+      <div id="rightSide" class="right" hidden>
+          <img src="{{ url_for('static', filename = 'der-loewe.png') }}" alt="Ein Loewe" style="float:right;width:100px;">
+          <span class="hint" id="hint"></span>
+      </div>
+    </div>
+      
+    <!--<div style="background-color:#e5e5e5;text-align:left;padding:10px;margin-top:7px;">hier 
+    </div>text-align:center;-->
+    <div style="background-color:#e5e5e5;padding:10px;margin-top:7px;">
+        <button id="faq" class="inputfile"></button>
+        <label for="faq">Informationen und Hinweise zur Nutzung</label>
+        ©Moritz Heffter, 2019, <a href="mailto:m.heffter@me.com">Mail an den Autor</a>
+    </div>
+</body>
+</html>
