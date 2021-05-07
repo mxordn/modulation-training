@@ -1,9 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Injectable } from '@angular/core';
-import { ScoreCanvasComponent, Svg } from '../score-canvas/score-canvas.component';
+import { Svg } from '../score-canvas/score-canvas.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 

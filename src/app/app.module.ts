@@ -13,7 +13,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { AppComponent } from './app.component';
 import { ScoreCanvasComponent, Svg } from 'src/app/score-canvas/score-canvas.component';
-import { ScoreFrameComponent } from 'src/app/score-frame/score-frame.component';
+import { ScoreFrameComponent } from './score-frame/score-frame.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { HintComponent } from './hint/hint.component';
