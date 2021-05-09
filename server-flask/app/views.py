@@ -74,15 +74,16 @@ def neueAufgabe():
             "Teufelsmühle I": MODULS_FOLDER + "teufelsmuehle-1",
             }
 
+    modTypeUsed = ""
     requestedMod = request.form.get("modType")
-    modTypeUsed = []
-    if isinstance(requestedMod, str):
+    try:
+        requestedMod = json.loads(requestedMod)
+        modTypeUsed = random.choice(requestedMod)
+    except:
         modTypeUsed = requestedMod
-    else:
-        modType = json.loads(request.form.get("modType"))
-        modTypeUsed = random.choice(modType)
 
-    #print(modType, modTypeUsed)
+
+    print(modTypeUsed)
     thePath = modDict[modTypeUsed]
 
     tInts = ["A-4", "P-4", "M-3", "m-3", "M-2", "M-2", "m-2", "P1", "P1", "m2", "M2", "M2", "m3", "M3", "P4", "A4"]
