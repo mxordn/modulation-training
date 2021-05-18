@@ -1,12 +1,23 @@
+import io
+from typing import List
+from xml.etree import ElementTree as ET
+import subprocess, tempfile
 import os, ast, json
 import random
-from flask import render_template, flash, redirect, session, url_for, request, send_from_directory, abort, send_file, jsonify, make_response    
+from flask import render_template, flash, redirect, session, url_for, request, send_from_directory, abort, send_file, jsonify, make_response
+from flask.json import JSONDecoder    
 from werkzeug.utils import secure_filename
 from app import app
 from config import MODULS_FOLDER
 from music21 import stream, converter, musicxml
 from flask_cors import cross_origin
 import verovio
+import subprocess
+from cairosvg import svg2png
+from base64 import b64encode
+from svglib.svglib import svg2rlg
+from xml.etree import ElementTree
+
 
 @app.route('/', methods = ['GET', 'POST'])
 @app.route('/index', methods = ['GET', 'POST'])
@@ -76,14 +87,18 @@ def neueAufgabe():
 
     modTypeUsed = ""
     requestedMod = request.form.get("modType")
+    isAppRequest = True
+    #See what was requested. Website und App send Lists (as json) or Strings.
     try:
         requestedMod = json.loads(requestedMod)
         modTypeUsed = random.choice(requestedMod)
     except:
         modTypeUsed = requestedMod
+        isAppRequest = False
 
 
-    print(modTypeUsed)
+    #print(modTypeUsed)
+    #find the xml paths of the example.
     thePath = modDict[modTypeUsed]
 
     tInts = ["A-4", "P-4", "M-3", "m-3", "M-2", "M-2", "m-2", "P1", "P1", "m2", "M2", "M2", "m3", "M3", "P4", "A4"]
@@ -113,7 +128,17 @@ def neueAufgabe():
         strSVG = vtk.renderToSVG(each+1)
         pageArray.append(strSVG)
     result["svg"] = pageArray
+    #pngImg = b64encode(svg2png(pageArray[0], output_height=200, scale=1.5))
+    #result["png"] = bytes.decode(pngImg)
+    svgFile = io.StringIO(pageArray[0])
+    img = svg2rlg(svgFile)
+    strSvg = img.asString("png")
     
+    if isAppRequest:
+        result['png'] = bytes.decode(b64encode(img.asString('png')))
+        result['pngInk'] = bytes.decode(b64encode(renderPNG(pageArray[0])[0]))
+    #print(strSvg, result['png'], pageArray[0]) #strSvg
+
     #render solution
     vtk.loadData(lsgXML.decode('utf-8'))
     vtk.setOption("pageHeight", "600")
@@ -132,6 +157,10 @@ def neueAufgabe():
 
     #deliver svg as a jsonified result
     result["lsg"] = pageArrayLsg
+    if isAppRequest:
+        result['pngInkLsg'] = bytes.decode(b64encode(renderPNG(pageArrayLsg[0])[0]))
+
+    #check if something is rendered
     if result["svg"] != []:
         result["done"] = True
     
@@ -140,10 +169,27 @@ def neueAufgabe():
     return resp
     #jsonify(result=result)
 
+@app.route('/api/png', methods = ['GET', 'POST'])
+@cross_origin()
+def png():
+    return send_file('static/Eroeffnung-Dur-1-1.png')
+
 @app.route('/api/neueAufgabeZwei', methods = ['GET', 'POST'])
 @cross_origin()
 def neueAufgabeZwei():
-    print(request.form.get("modType"))
-    result =  request.form.get('modType')
-    headers = {'Access-Control-Allow-Origin': '*'}
-    return make_response(result, headers)
+    return "Done"
+
+def renderPNG(svg):
+    temp = tempfile.NamedTemporaryFile(suffix='.svg')
+    
+    svgFile = bytes(svg, encoding='utf-8')
+    temp.write(svgFile)
+    temp.seek(0)
+    tree = ET.parse(temp)
+    for child in tree.iter():
+        if "id" in child.attrib.keys():
+            if 'system-' in child.attrib['id']:
+                print(child.attrib)
+                systemId = child.attrib['id']
+    png = subprocess.run(['inkscape', '--export-type=png', '--export-id={sysid}'.format(sysid = systemId), '--export-filename=-', '--export-dpi=300', temp.name], capture_output=True, stdin=subprocess.PIPE)#
+    return (png.stdout, png.stderr)
