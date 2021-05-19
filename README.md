@@ -13,6 +13,7 @@ The server backend is a small flask app, that requires music21 an verovio as dep
 - music21
 - verovio
 - flask
+- Inkscape (for usage with png images ouptut)
 
 ### Client:
 - Angular

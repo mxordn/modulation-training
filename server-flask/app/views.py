@@ -88,6 +88,7 @@ def neueAufgabe():
     modTypeUsed = ""
     requestedMod = request.form.get("modType")
     isAppRequest = True
+    
     #See what was requested. Website und App send Lists (as json) or Strings.
     try:
         requestedMod = json.loads(requestedMod)
@@ -121,7 +122,7 @@ def neueAufgabe():
     vtk.setOption("header", "none")
     vtk.setOption("footer", "none")
     vtk.setOption("adjustPageHeight", "true")
-#vtk.setBorder(0)
+    #vtk.setBorder(0)
     vtk.redoLayout()
     pageArray = []
     for each in range(vtk.getPageCount()):
@@ -132,7 +133,7 @@ def neueAufgabe():
     #result["png"] = bytes.decode(pngImg)
     svgFile = io.StringIO(pageArray[0])
     img = svg2rlg(svgFile)
-    strSvg = img.asString("png")
+    #strSvg = img.asString("png")
     
     if isAppRequest:
         result['png'] = bytes.decode(b64encode(img.asString('png')))
@@ -145,7 +146,7 @@ def neueAufgabe():
     vtk.setOption("pageWidth", "1650")
     vtk.setScale(45)
     vtk.setOption("adjustPageHeight", "true")
-#    vtk.setBorder(0)
+    #vtk.setBorder(0)
     vtk.redoLayout()
     pageArrayLsg = []
     for each in range(vtk.getPageCount()):
@@ -189,7 +190,7 @@ def renderPNG(svg):
     for child in tree.iter():
         if "id" in child.attrib.keys():
             if 'system-' in child.attrib['id']:
-                print(child.attrib)
+                #print(child.attrib)
                 systemId = child.attrib['id']
     png = subprocess.run(['inkscape', '--export-type=png', '--export-id={sysid}'.format(sysid = systemId), '--export-filename=-', '--export-dpi=300', temp.name], capture_output=True, stdin=subprocess.PIPE)#
     return (png.stdout, png.stderr)
