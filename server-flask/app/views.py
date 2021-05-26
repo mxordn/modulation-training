@@ -42,7 +42,9 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 def collectHintsForFigures(aufgabe):
-    if aufgabe == "Loewe II":
+    if aufgabe == "Loewe I":
+        hint = "[Keine Hinweise]"
+    elif aufgabe == "Loewe II":
         hint = "Hinweis: „b5“ meint hier immer die verminderte Quinte über dem Basston."
     elif aufgabe == "Loewe III":
         hint = "Hinweis: „#6“ meint hier immer die große Sexte über dem Basston."
@@ -65,6 +67,92 @@ def collectHintsForFigures(aufgabe):
     else:
         return None
     return hint
+
+@app.route('/api/neueAufgabeApp', methods = ['GET', 'POST'])
+@cross_origin()
+def neueAufgabeApp():
+    result = {}
+    modDict = {"Loewe III": MODULS_FOLDER + "loewe-3",
+            "Loewe II": MODULS_FOLDER + "loewe-2",
+            "Loewe I": MODULS_FOLDER + "loewe-1",
+            "Loewe IV": MODULS_FOLDER + "loewe-4",
+            "Loewe V": MODULS_FOLDER + "loewe-5",
+            "Loewe VI": MODULS_FOLDER + "loewe-6",
+            "Loewe VII": MODULS_FOLDER + "loewe-7",
+            "Loewe VIII": MODULS_FOLDER + "loewe-8",
+            "Loewe IX": MODULS_FOLDER + "loewe-9",
+            "Loewe X": MODULS_FOLDER + "loewe-10",
+            "Loewe XI": MODULS_FOLDER + "loewe-11",
+            "Teufelsmühle I": MODULS_FOLDER + "teufelsmuehle-1",
+            }
+
+    modTypeUsed = ""
+    requestedMod = request.form.get("modType")
+    
+    #See what was requested. Website und App send Lists (as json) or Strings.
+    try:
+        requestedMod = json.loads(requestedMod)
+        modTypeUsed = random.choice(requestedMod)
+    except:
+        return "Wrong Request"
+        #modTypeUsed = requestedMod
+        #isAppRequest = False
+
+    thePath = modDict[modTypeUsed]
+
+    tInts = ["A-4", "P-4", "M-3", "m-3", "M-2", "M-2", "m-2", "P1", "P1", "m2", "M2", "M2", "m3", "M3", "P4", "A4"]
+    tI = random.choice(tInts)
+    s = converter.parse(thePath + ".musicxml")
+
+    exS = s.transpose(tI)
+    exerciceXML = musicxml.m21ToXml.GeneralObjectExporter().parse(exS)
+
+    s = converter.parse(thePath + "-lsg.musicxml")
+    lsgS = s.transpose(tI)
+    lsgXML = musicxml.m21ToXml.GeneralObjectExporter().parse(lsgS)
+
+    #render exercice
+    vtk = verovio.toolkit()
+    vtk.loadData(exerciceXML.decode('utf-8'))
+    vtk.setOption("pageHeight", "600")
+    vtk.setOption("pageWidth", "1500")
+    vtk.setScale(45)
+    vtk.setOption("header", "none")
+    vtk.setOption("footer", "none")
+    vtk.setOption("adjustPageHeight", "true")
+    vtk.redoLayout()
+    pageArray = []
+    for each in range(vtk.getPageCount()):
+        strSVG = vtk.renderToSVG(each+1)
+        pageArray.append(strSVG)
+
+    result['pngInk'] = bytes.decode(b64encode(renderPNG(pageArray[0])[0]))
+
+    #render solution
+    vtk.loadData(lsgXML.decode('utf-8'))
+    vtk.setOption("pageHeight", "600")
+    vtk.setOption("pageWidth", "1650")
+    vtk.setScale(45)
+    vtk.setOption("adjustPageHeight", "true")
+    vtk.redoLayout()
+    pageArrayLsg = []
+    for each in range(vtk.getPageCount()):
+        strSVG = vtk.renderToSVG(each+1)
+        pageArrayLsg.append(strSVG)
+    
+    result['pngInkLsg'] = bytes.decode(b64encode(renderPNG(pageArrayLsg[0])[0]))
+    
+    #get hint if there are some.
+    result["hint"] = collectHintsForFigures(modTypeUsed)
+
+    #check if something is rendered
+    if result["pngInk"]:
+        result["done"] = True
+    
+    headers = {'Access-Control-Allow-Origin': '*'}
+    resp = make_response((result, headers))
+    return resp
+
 
 @app.route('/api/neueAufgabe', methods = ['GET', 'POST'])
 @cross_origin()
