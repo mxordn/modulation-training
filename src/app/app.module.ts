@@ -9,6 +9,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 
 import { AppComponent } from './app.component';
@@ -35,6 +36,7 @@ import { HintComponent } from './hint/hint.component';
     MatSnackBarModule,
     MatSlideToggleModule,
     MatListModule,
+    MatGridListModule,
     MatSidenavModule,
     Svg,
     InlineSVGModule.forRoot()

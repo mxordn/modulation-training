@@ -73,6 +73,7 @@ export class ScoreFrameComponent implements OnInit {
   public async onSubmitNewExercise() {
     let oldhint = this.scores.hint;
     this.selectedMods = [];
+    this.checkSelection();
     this.modulations.forEach((el) => {
       if (el.checked) {
         this.selectedMods.push(el.loewe);
@@ -99,6 +100,16 @@ export class ScoreFrameComponent implements OnInit {
       this.scores.svg = "Serverfehler";
       this.scores.lsg = "Serverfehler";
       this.hint = "Serverfehler";
+    }
+  }
+  public checkSelection() {
+    let isNotSelected: Boolean;
+    isNotSelected = this.modulations.every((el) => 
+      el.checked === false);
+    console.log(isNotSelected);
+    if (isNotSelected) {
+      alert("Bitte Modulation auswählen. Loewe I wird automatisch gesetzt.");
+      this.oberquinte.checked = true;
     }
   }
 

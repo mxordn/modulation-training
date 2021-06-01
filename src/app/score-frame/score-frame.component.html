@@ -7,16 +7,18 @@
       </div>
       <div>        
         <div class="offcanvas-body">
-          <mat-list>
-            <mat-list-item *ngFor="let mod of modulations; let i = index">
+          <mat-grid-list cols="2" rowHeight="4:1">
+            <mat-grid-tile *ngFor="let mod of modulations; let i = index">
+              <p style="text-align: left;">
                 <mat-slide-toggle [(ngModel)]="mod.checked" type="checkbox" id="checkbox{{i}}"
                         name="{{mod.type}}" value="{{mod.type}}" color="primary">
                         {{mod.shortcut[0]}}<i class="{{mod.shortcut[1]}}"></i>
                 </mat-slide-toggle>
-            </mat-list-item>
-          </mat-list>
+              </p>
+            </mat-grid-tile>
+          </mat-grid-list>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close and Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="checkSelection()">Close and Save</button>
             <button type="button" class="btn btn-primary" (click)="onSubmitNewExercise()" data-bs-dismiss="modal">Save and new exercise</button>
           </div>
         </div>
