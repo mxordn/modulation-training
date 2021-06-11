@@ -54,7 +54,7 @@ export class ScoreFrameComponent implements OnInit {
 
   submitted = false;
   userMods = [];
-  endpointAufgabe = 'api/neueAufgabe'
+  endpointAufgabe = 'https://glarean.mh-freiburg.de/hessen/loewe/api/neueAufgabe'
   selectedMods: String[] = [];
   selMod: String;
   //'https://glarean.mh-freiburg.de/hessen/loewe/neueAufgabe';
