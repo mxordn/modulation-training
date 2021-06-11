@@ -57,7 +57,7 @@ export class ScoreFrameComponent implements OnInit {
   endpointAufgabe = 'https://glarean.mh-freiburg.de/hessen/loewe/api/neueAufgabe'
   selectedMods: String[] = [];
   selMod: String;
-  //'https://glarean.mh-freiburg.de/hessen/loewe/neueAufgabe';
+  //'https://glarean.mh-freiburg.de/hessen/loewe/neueAufgabe';'neueAufgabe'
 
   svg: SafeHtml;
   public lsg: SafeHtml;
