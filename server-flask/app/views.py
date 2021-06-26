@@ -8,7 +8,7 @@ from flask import render_template, flash, redirect, session, url_for, request, s
 from flask.json import JSONDecoder    
 from werkzeug.utils import secure_filename
 from app import app
-from config import MODULS_FOLDER
+from config import MODULS_FOLDER, HOME
 from music21 import stream, converter, musicxml
 from flask_cors import cross_origin
 import verovio
@@ -19,8 +19,9 @@ from svglib.svglib import svg2rlg
 from xml.etree import ElementTree
 
 
-@app.route('/', methods = ['GET', 'POST'])
-@app.route('/index', methods = ['GET', 'POST'])
+
+@app.route(HOME + '/', methods = ['GET', 'POST'])
+@app.route(HOME + '/index', methods = ['GET', 'POST'])
 def index():
     mods = ["Loewe I",
             "Loewe II",
@@ -68,7 +69,7 @@ def collectHintsForFigures(aufgabe):
         return None
     return hint
 
-@app.route('/api/neueAufgabeApp', methods = ['GET', 'POST'])
+@app.route(HOME + '/api/neueAufgabeApp', methods = ['GET', 'POST'])
 @cross_origin()
 def neueAufgabeApp():
     result = {}
@@ -154,7 +155,7 @@ def neueAufgabeApp():
     return resp
 
 
-@app.route('/api/neueAufgabe', methods = ['GET', 'POST'])
+@app.route(HOME + '/api/neueAufgabe', methods = ['GET', 'POST'])
 @cross_origin()
 def neueAufgabe():
     #init a dict to be returned in the end
@@ -221,6 +222,7 @@ def neueAufgabe():
     #result["png"] = bytes.decode(pngImg)
     svgFile = io.StringIO(pageArray[0])
     img = svg2rlg(svgFile)
+    #print(pageArray[0])
     #strSvg = img.asString("png")
     
     if isAppRequest:
@@ -258,12 +260,12 @@ def neueAufgabe():
     return resp
     #jsonify(result=result)
 
-@app.route('/api/png', methods = ['GET', 'POST'])
+@app.route(HOME + '/api/png', methods = ['GET', 'POST'])
 @cross_origin()
 def png():
     return send_file('static/Eroeffnung-Dur-1-1.png')
 
-@app.route('/api/neueAufgabeZwei', methods = ['GET', 'POST'])
+@app.route(HOME + '/api/neueAufgabeZwei', methods = ['GET', 'POST'])
 @cross_origin()
 def neueAufgabeZwei():
     return "Done"
@@ -280,5 +282,5 @@ def renderPNG(svg):
             if 'system-' in child.attrib['id']:
                 #print(child.attrib)
                 systemId = child.attrib['id']
-    png = subprocess.run(['inkscape', '--export-type=png', '--export-id={sysid}'.format(sysid = systemId), '--export-filename=-', '--export-dpi=300', temp.name], capture_output=True, stdin=subprocess.PIPE)#
+    png = subprocess.run(['inkscape', '-z', '--export-type=png', '--export-id={sysid}'.format(sysid = systemId), '--export-filename=-', '--export-dpi=300', temp.name], stdout=subprocess.PIPE, stdin=subprocess.PIPE)#
     return (png.stdout, png.stderr)
