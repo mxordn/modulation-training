@@ -4,6 +4,68 @@
 .mainContent{ width: 75%; float: left; }
 
 @media only screen and (max-width: 768px){
-    .actions{ width: 100%; }
-    .mainContent{ width: 100%; height: 100%; }
+    .actions{ width: 100%; float: center; }
+    .mainContent{ width: 100%; height: 100%; float: center; }
+}
+
+/* ----------- iPhone 6+, 7+ and 8+ ----------- */
+
+/* Portrait and Landscape */
+@media only screen 
+  and (min-device-width: 414px) 
+  and (max-device-width: 736px) 
+  and (-webkit-min-device-pixel-ratio: 3) {
+    .actions{ width: 100%; float: center; }
+    .mainContent{ width: 100%; height: 100%; float: center; }
+}
+
+/* Portrait */
+@media only screen 
+  and (min-device-width: 414px) 
+  and (max-device-width: 736px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: portrait) { 
+    .actions{ width: 100%; float: center; }
+    .mainContent{ width: 100%; height: 75%; float: center; }
+}
+
+/* Landscape */
+@media only screen 
+  and (min-device-width: 414px) 
+  and (max-device-width: 736px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: landscape) { 
+    .actions{ width: 100%; float: left; }
+    .mainContent{ width: 100%; height: 100%; float: right; }
+}
+
+/* ----------- iPhone X ----------- */
+
+/* Portrait and Landscape */
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3) {
+    .actions{ width: 100%; float: center; }
+    .mainContent{ width: 100%; height: 100%; float: center; }
+}
+
+/* Portrait */
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: portrait) {
+    .actions{ width: 100%; float: center; }
+    .mainContent{ width: 100%; height: 75%; float: center; }
+}
+
+/* Landscape */
+@media only screen 
+  and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: landscape) {
+    .actions{ width: 25%; float: left; }
+    .mainContent{ width: 75%; height: 100%; float: right; }
 }

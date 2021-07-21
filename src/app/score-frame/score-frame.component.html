@@ -27,32 +27,34 @@
   </div>
 </div>
 
-<div class="container-fluid ms-3 me-3 mt-3">
-<div class="container">
-  <h2>Loewe – Modulationstraining</h2>
-  <div class="mainContent">
-    <div class="card-body" style="height: max-content;">
-      <div class="svg" [innerHTML]="scores.svg"></div>
-    </div>
-  </div>
-</div>
-<div class="container">
-  <div class="actions">
-    <!-- <h3>Actions:</h3>-->
-      <div class="card-text">
-        <div class="btn-group-vertical" style="width: 90%;">
-          <button (click)="onSubmitNewExercise()" class="btn btn-primary">New exercise</button>
-          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#drawer">Select Modulations</button>
+<div class="container-fluid ml-3 mr-3 mt-3 mb-3">
+  <h2>Loewe – Modulation Practice</h2>
+    <div class="card border-light mainContent">
+      <div class="card-body" style="height: max-content;">
+        <h5 class="card-title">Exercise</h5>
+          <div class="spinner-border text-dark" role="status" aria-hidden="true" [hidden]="scores.done!='loading'"></div>
+          <span class="svg" [innerHTML]="scores.svg" [hidden]="scores.done=='loading'"></span>
         </div>
-        <br>
-        <br>
-        <div class="btn-group-vertical" role="group" style="width: 90%;">
-          <button class="btn btn-warning" [disabled]="!scores.hint" (click)="openHint(scores.hint)">Show hint</button>
-          <button class="btn btn-success" [disabled]="!scores.lsg" data-bs-toggle="modal" data-bs-target="#solution">Show sample solution</button>
+    </div>
+    <div class="card border-light">
+      <div class="card-body">
+          <h5 class="card-title">Options</h5>
+          <div class="card-text">
+          <div class="btn-group-vertical" style="width: 100%;">
+            <button (click)="onSubmitNewExercise()" class="btn btn-primary">New exercise
+              <span [hidden]="scores.done!='loading'" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#drawer">Select Modulations</button>
+          </div>
+          <br>
+          <br>
+          <div class="btn-group-vertical" role="group" style="width: 100%;">
+            <button class="btn btn-warning" [disabled]="!scores.hint" (click)="openHint(scores.hint)">Show hint</button>
+            <button class="btn btn-success" [disabled]="!scores.lsg" data-bs-toggle="modal" data-bs-target="#solution">Show sample solution</button>
+          </div>
         </div>
       </div>
-  </div>
-</div>
+    </div>
 </div>
 
 <div class="modal" tabindex="-1" id="solution">

@@ -1,10 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Component, OnInit, Sanitizer } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { Svg } from '../score-canvas/score-canvas.component';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 
 export interface Modulation {
   type: String,
@@ -14,10 +13,16 @@ export interface Modulation {
 }
 
 const headerDict = {
-  'Content-Type': 'application/json',
-  'Accept': 'application/json',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'responseType': 'text'
+  //'Content-Type': 'multipart/form-data',
+  //'Accept': 'application/json',
+  'Accept': '*/*',
+  //'Access-Control-Allow-Headers': 'headers',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  //'Access-Control-Request-Method': 'POST',
+  //'Access-Control-Request-Headers': 'X-PINGOTHER, Content-Type'
+  //'responseType': 'text'
 }
 
 const requestOptions = {                                                                                                                                                                                 
@@ -54,9 +59,11 @@ export class ScoreFrameComponent implements OnInit {
 
   submitted = false;
   userMods = [];
-  endpointAufgabe = 'https://glarean.mh-freiburg.de/hessen/loewe/api/neueAufgabe'
+  endpointAufgabe = 'https://satzlehre-online.de/loewe/api/neueAufgabe'; //'https://satzlehre-online.de/loewe/api/neueAufgabeApp'; //'https://f6a7a7f31ca4.ngrok.io/loewe/api/neueAufgabeApp';//glarean.mh-freiburg.de/hessen/loewe/api/neueAufgabe 71c0c76a931d.ngrok.io
   selectedMods: String[] = [];
   selMod: String;
+  oldhint: string = "";
+
   //'https://glarean.mh-freiburg.de/hessen/loewe/neueAufgabe';'neueAufgabe'
 
   svg: SafeHtml;
@@ -71,7 +78,7 @@ export class ScoreFrameComponent implements OnInit {
   }
 
   public async onSubmitNewExercise() {
-    let oldhint = this.scores.hint;
+    this.oldhint = this.scores.hint;
     this.selectedMods = [];
     this.checkSelection();
     this.modulations.forEach((el) => {
@@ -81,27 +88,28 @@ export class ScoreFrameComponent implements OnInit {
     });
 
     let formData: FormData = new FormData();
-    this.selMod = JSON.stringify(this.selectedMods);
-    formData.append("modType", JSON.stringify(this.selectedMods));
-//    console.log();
-//    console.log(formData.get('modType'));
+    this.selMod = this.selectedMods.toString();
+    formData.append('modType', JSON.stringify(this.selectedMods)); //.toString()
+    formData.append("client", "svg");
+    console.log(formData.getAll("modType"));
+    //console.log(this.selectedMods);
+    //const req: HttpRequest<FormData> = new HttpRequest("POST", this.endpointAufgabe, formData);
+    //const res = this.makeFileRequest(formData);
+    this.scores.done = "loading"
+    await this.hC.post(this.endpointAufgabe, formData, requestOptions).toPromise()
+      .catch((error) => {
+            console.log(error);
+        })
+      .then((response: any) => {
+        this.scores.done = response.done;
+        this.scores.hint = response.hint;
+        this.scores.lsg = this.sanitizer.bypassSecurityTrustHtml(response.lsg.toString());
+        this.scores.svg = this.sanitizer.bypassSecurityTrustHtml(response.svg.toString());
+        this.checkHint(this.scores.hint);
+      });
 
-
-    const result = await this.hC.post<Svg>(this.endpointAufgabe, formData).toPromise()
-    if (result.done) {
-      this.scores.svg = this.sanitizer.bypassSecurityTrustHtml(result.svg.toString());
-      this.scores.lsg = this.sanitizer.bypassSecurityTrustHtml(result.lsg.toString());
-      this.scores.hint = result.hint;
-      if (this.scores.hint != oldhint) {
-        this.hintSnack.dismiss();
-      }
-    }
-    else {
-      this.scores.svg = "Serverfehler";
-      this.scores.lsg = "Serverfehler";
-      this.hint = "Serverfehler";
-    }
   }
+  
   public checkSelection() {
     let isNotSelected: Boolean;
     isNotSelected = this.modulations.every((el) => 
@@ -110,6 +118,13 @@ export class ScoreFrameComponent implements OnInit {
     if (isNotSelected) {
       alert("Bitte Modulation auswählen. Loewe I wird automatisch gesetzt.");
       this.oberquinte.checked = true;
+    }
+  }
+
+  public checkHint(hint: string) {
+    if (this.oldhint != hint) {
+      //console.log(this.oldhint, hint);
+      this.hintSnack.dismiss();
     }
   }
 

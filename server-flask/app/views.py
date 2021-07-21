@@ -69,7 +69,7 @@ def collectHintsForFigures(aufgabe):
         return None
     return hint
 
-@app.route(HOME + '/api/neueAufgabeApp', methods = ['GET', 'POST'])
+@app.route(HOME + '/api/neueAufgabeApp', methods = ['GET', 'POST', 'OPTIONS'])
 @cross_origin()
 def neueAufgabeApp():
     result = {}
@@ -88,8 +88,9 @@ def neueAufgabeApp():
             }
 
     modTypeUsed = ""
-    requestedMod = request.form.get("modType")
-    
+    requestedMod = request.form.get('modType')
+    fdata = request.form.get('modType')
+    print(fdata)
     #See what was requested. Website und App send Lists (as json) or Strings.
     try:
         requestedMod = json.loads(requestedMod)
@@ -150,7 +151,9 @@ def neueAufgabeApp():
     if result["pngInk"]:
         result["done"] = True
     
-    headers = {'Access-Control-Allow-Origin': '*'}
+    headers = { "Access-Control-Request-Headers": "X-Requested-With, accept, content-type",
+                'Access-Control-Allow-Methods': 'GET, POST'}
+                #'Access-Control-Allow-Origin': '*',
     resp = make_response((result, headers))
     return resp
 
@@ -177,6 +180,8 @@ def neueAufgabe():
     modTypeUsed = ""
     requestedMod = request.form.get("modType")
     isAppRequest = True
+    print(requestedMod)
+    requestDataType = request.form.get("dataType")
     
     #See what was requested. Website und App send Lists (as json) or Strings.
     try:
@@ -184,10 +189,8 @@ def neueAufgabe():
         modTypeUsed = random.choice(requestedMod)
     except:
         modTypeUsed = requestedMod
-        isAppRequest = False
+        #isAppRequest = False
 
-
-    #print(modTypeUsed)
     #find the xml paths of the example.
     thePath = modDict[modTypeUsed]
 
@@ -225,7 +228,7 @@ def neueAufgabe():
     #print(pageArray[0])
     #strSvg = img.asString("png")
     
-    if isAppRequest:
+    if requestDataType == 'png':
         result['png'] = bytes.decode(b64encode(img.asString('png')))
         result['pngInk'] = bytes.decode(b64encode(renderPNG(pageArray[0])[0]))
     #print(strSvg, result['png'], pageArray[0]) #strSvg
@@ -248,15 +251,15 @@ def neueAufgabe():
 
     #deliver svg as a jsonified result
     result["lsg"] = pageArrayLsg
-    if isAppRequest:
+    if requestDataType == 'png':
         result['pngInkLsg'] = bytes.decode(b64encode(renderPNG(pageArrayLsg[0])[0]))
 
     #check if something is rendered
     if result["svg"] != []:
         result["done"] = True
     
-    headers = {'Access-Control-Allow-Origin': '*'}
-    resp = make_response((result, headers))
+    #headers = {'Access-Control-Allow-Origin': '*'}, headers
+    resp = make_response((result))
     return resp
     #jsonify(result=result)
 
