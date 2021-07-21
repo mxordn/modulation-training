@@ -90,13 +90,13 @@ def neueAufgabeApp():
     modTypeUsed = ""
     requestedMod = request.form.get('modType')
     fdata = request.form.get('modType')
-    print(fdata)
+    #print(fdata)
     #See what was requested. Website und App send Lists (as json) or Strings.
     try:
         requestedMod = json.loads(requestedMod)
         modTypeUsed = random.choice(requestedMod)
     except:
-        return "Wrong Request"
+        return make_response("Wrong Request")
         #modTypeUsed = requestedMod
         #isAppRequest = False
 
@@ -208,9 +208,9 @@ def neueAufgabe():
     #render exercice
     vtk = verovio.toolkit()
     vtk.loadData(exerciceXML.decode('utf-8'))
-    vtk.setOption("pageHeight", "600")
-    vtk.setOption("pageWidth", "1500")
-    vtk.setScale(45)
+    #vtk.setOption("pageHeight", "600")
+    vtk.setOption("pageWidth", "980")
+    vtk.setScale(40)
     vtk.setOption("header", "none")
     vtk.setOption("footer", "none")
     vtk.setOption("adjustPageHeight", "true")
@@ -236,8 +236,8 @@ def neueAufgabe():
     #render solution
     vtk.loadData(lsgXML.decode('utf-8'))
     vtk.setOption("pageHeight", "600")
-    vtk.setOption("pageWidth", "1650")
-    vtk.setScale(45)
+    vtk.setOption("pageWidth", "980")
+    vtk.setScale(40)
     vtk.setOption("adjustPageHeight", "true")
     #vtk.setBorder(0)
     vtk.redoLayout()
