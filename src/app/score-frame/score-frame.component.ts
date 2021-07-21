@@ -25,7 +25,7 @@ const headerDict = {
   //'responseType': 'text'
 }
 
-const requestOptions = {                                                                                                                                                                                 
+const requestOptions = {                                                                                                                                                                                
   headers: new HttpHeaders(headerDict), 
 };
 
@@ -59,7 +59,7 @@ export class ScoreFrameComponent implements OnInit {
 
   submitted = false;
   userMods = [];
-  endpointAufgabe = 'https://satzlehre-online.de/loewe/api/neueAufgabe'; //'https://satzlehre-online.de/loewe/api/neueAufgabeApp'; //'https://f6a7a7f31ca4.ngrok.io/loewe/api/neueAufgabeApp';//glarean.mh-freiburg.de/hessen/loewe/api/neueAufgabe 71c0c76a931d.ngrok.io
+  endpointAufgabe = 'https://d1159dfa5528.ngrok.io/loewe/api/neueAufgabe'; //'https://satzlehre-online.de/loewe/api/neueAufgabeApp'; //'https://f6a7a7f31ca4.ngrok.io/loewe/api/neueAufgabeApp';//glarean.mh-freiburg.de/hessen/loewe/api/neueAufgabe 71c0c76a931d.ngrok.io
   selectedMods: String[] = [];
   selMod: String;
   oldhint: string = "";

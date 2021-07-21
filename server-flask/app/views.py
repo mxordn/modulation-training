@@ -7,8 +7,8 @@ import random
 from flask import render_template, flash, redirect, session, url_for, request, send_from_directory, abort, send_file, jsonify, make_response
 from flask.json import JSONDecoder    
 from werkzeug.utils import secure_filename
-from app import app
-from config import MODULS_FOLDER, HOME
+from . import app
+from config import MODULS_FOLDER, HOME, INKSCAPE
 from music21 import stream, converter, musicxml
 from flask_cors import cross_origin
 import verovio
@@ -151,10 +151,10 @@ def neueAufgabeApp():
     if result["pngInk"]:
         result["done"] = True
     
-    headers = { "Access-Control-Request-Headers": "X-Requested-With, accept, content-type",
-                'Access-Control-Allow-Methods': 'GET, POST'}
-                #'Access-Control-Allow-Origin': '*',
-    resp = make_response((result, headers))
+    #headers = { "Access-Control-Request-Headers": "X-Requested-With, accept, content-type",
+    #            'Access-Control-Allow-Methods': 'GET, POST',
+    #            'Access-Control-Allow-Origin': '*'}, headers
+    resp = make_response((result))
     return resp
 
 
@@ -181,10 +181,10 @@ def neueAufgabe():
     requestedMod = request.form.get("modType")
     isAppRequest = True
     print(requestedMod)
-    requestDataType = request.form.get("dataType")
     
     #See what was requested. Website und App send Lists (as json) or Strings.
     try:
+        requestDataType = request.form.get("dataType")
         requestedMod = json.loads(requestedMod)
         modTypeUsed = random.choice(requestedMod)
     except:
@@ -258,7 +258,10 @@ def neueAufgabe():
     if result["svg"] != []:
         result["done"] = True
     
-    #headers = {'Access-Control-Allow-Origin': '*'}, headers
+    #headers = { "Access-Control-Request-Headers": "X-Requested-With, accept, content-type",
+    #            'Access-Control-Allow-Methods': 'GET, POST',
+    #            'Access-Control-Allow-Origin': '*'}
+                #{}, headers
     resp = make_response((result))
     return resp
     #jsonify(result=result)
@@ -285,5 +288,5 @@ def renderPNG(svg):
             if 'system-' in child.attrib['id']:
                 #print(child.attrib)
                 systemId = child.attrib['id']
-    png = subprocess.run(['inkscape', '-z', '--export-type=png', '--export-id={sysid}'.format(sysid = systemId), '--export-filename=-', '--export-dpi=300', temp.name], stdout=subprocess.PIPE, stdin=subprocess.PIPE)#
+    png = subprocess.run([INKSCAPE, '-z', '--export-type=png', '--export-id={sysid}'.format(sysid = systemId), '--export-filename=-', '--export-dpi=300', temp.name], stdout=subprocess.PIPE, stdin=subprocess.PIPE)#
     return (png.stdout, png.stderr)
