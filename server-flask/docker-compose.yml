@@ -1,0 +1,7 @@
+services:
+    loewe-flask:
+        build:
+            .
+        restart: always
+        ports:
+            - 8241:8241
