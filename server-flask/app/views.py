@@ -115,13 +115,17 @@ def neueAufgabeApp():
 
     #render exercice
     vtk = verovio.toolkit()
+    vtk.setResourcePath(os.path.join(os.path.dirname(verovio.__file__), "data"))
     vtk.loadData(exerciceXML.decode('utf-8'))
-    vtk.setOption("pageHeight", "600")
-    vtk.setOption("pageWidth", "1500")
-    vtk.setScale(45)
-    vtk.setOption("header", "none")
-    vtk.setOption("footer", "none")
-    vtk.setOption("adjustPageHeight", "true")
+    options = {"pageHeight": 600, "pageWidth": 1500,
+               "scale": 45, "adjustPageHeight": True, "footer": "none"}
+    #vtk.setOption("pageHeight", "600")
+    #vtk.setOption("pageWidth", "1500")
+    #vtk.setScale(45)
+    #vtk.setOption("header", "none")
+    #vtk.setOption("footer", "none")
+    #vtk.setOption("adjustPageHeight", "true")
+    vtk.setOptions(options)
     vtk.redoLayout()
     pageArray = []
     for each in range(vtk.getPageCount()):
@@ -132,10 +136,12 @@ def neueAufgabeApp():
 
     #render solution
     vtk.loadData(lsgXML.decode('utf-8'))
-    vtk.setOption("pageHeight", "600")
-    vtk.setOption("pageWidth", "1650")
-    vtk.setScale(45)
-    vtk.setOption("adjustPageHeight", "true")
+    solutionOptions = {"pageHeight": 600, "pageWidth": 1650, "scale": 45, "adjustPageHeight": True, "footer": "none"}
+    #vtk.setOption("pageHeight", "600")
+    #vtk.setOption("pageWidth", "1650")
+    #vtk.setScale(45)
+    #vtk.setOption("adjustPageHeight", "true")
+    vtk.setOptions(solutionOptions)
     vtk.redoLayout()
     pageArrayLsg = []
     for each in range(vtk.getPageCount()):
@@ -207,13 +213,18 @@ def neueAufgabe():
 
     #render exercice
     vtk = verovio.toolkit()
+    vtk.setResourcePath(os.path.join(os.path.dirname(verovio.__file__),"data"))
     vtk.loadData(exerciceXML.decode('utf-8'))
+    
     #vtk.setOption("pageHeight", "600")
-    vtk.setOption("pageWidth", "980")
-    vtk.setScale(40)
-    vtk.setOption("header", "none")
-    vtk.setOption("footer", "none")
-    vtk.setOption("adjustPageHeight", "true")
+    options = {"pageWidth": 980, "adjustPageHeight": True,
+               "scale": 40, "footer": "none"}
+    vtk.setOptions(options)
+    #vtk.setOption("pageWidth", "980")
+    #vtk.setScale(40)
+    #vtk.setOption("header", "none")
+    #vtk.setOption("footer", "none")
+    #vtk.setOption("adjustPageHeight", "true")
     #vtk.setBorder(0)
     vtk.redoLayout()
     pageArray = []
@@ -235,10 +246,13 @@ def neueAufgabe():
 
     #render solution
     vtk.loadData(lsgXML.decode('utf-8'))
-    vtk.setOption("pageHeight", "600")
-    vtk.setOption("pageWidth", "980")
-    vtk.setScale(40)
-    vtk.setOption("adjustPageHeight", "true")
+    solutionOptions = {"pageHeight": 600, "pageWidth": 980,
+                       "scale": 40, "adjustPageHeight": True, 
+                       "footer": None, "header": None}
+    #vtk.setOption("pageHeight", "600")
+    #vtk.setOption("pageWidth", "980")
+    #vtk.setScale(40)
+    #vtk.setOption("adjustPageHeight", "true")
     #vtk.setBorder(0)
     vtk.redoLayout()
     pageArrayLsg = []

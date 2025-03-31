@@ -1,4 +1,4 @@
-FROM python:3.9-bookworm
+FROM python:3.10-slim
 
 WORKDIR /python-docker
 
@@ -10,4 +10,5 @@ RUN apt-get update && apt-get install -y inkscape
 
 COPY . .
 
-CMD [ "python3", "run.py" ]
+CMD [ "gunicorn", "--config", "gunicorn_conf.py", "app:app" ]
+
